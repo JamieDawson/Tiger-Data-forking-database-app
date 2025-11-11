@@ -33,7 +33,7 @@ This TypeScript app that uses the Tiger CLI walks through creating and managing 
    ```
 
 3. **Create a `.env` file**
-   Create a .env file and set MAIN_DB or TIGER_SERVICE_ID
+   Create a .env file and set MAIN_DB and TIGER_SERVICE_ID
 
    ```
    MAIN_DB= Add Service Id here
