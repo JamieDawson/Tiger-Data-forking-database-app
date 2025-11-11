@@ -1,6 +1,8 @@
 # Tiger Data Database Forking Demo
 
-This Node.js CLI script demonstrates how to create and manage zero-copy forks of Tiger Data Postgres databases.
+This TypeScript app that uses the Tiger CLI walks through creating and managing zero-copy Tiger Data Postgres forks. So you can spin up production-like sandboxes in minutes, rehearse risky changes without touching prod, and keep multiple feature or demo environments running safely in parallel.
+
+[Click here to watch the full video of me building the app.](https://youtu.be/0yq2LSEiOfk)
 
 ## Features
 
@@ -20,8 +22,8 @@ This Node.js CLI script demonstrates how to create and manage zero-copy forks of
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-org/tiger-data-take-home.git
-   cd tiger-data-take-home
+   git clone https://github.com/JamieDawson/Tiger-Data-forking-database-app.git
+   cd Tiger-Data-forking-database-app
    ```
 
 2. **Install dependencies**
@@ -31,25 +33,20 @@ This Node.js CLI script demonstrates how to create and manage zero-copy forks of
    ```
 
 3. **Create a `.env` file**
-
-   ```bash
-   cp .env.example .env    # if provided
-   # otherwise create src/.env manually and set MAIN_DB or TIGER_SERVICE_ID
-   ```
+   Create a .env file and set MAIN_DB or TIGER_SERVICE_ID
 
    ```
    MAIN_DB= Add Service Id here
     TIGER_PROJECT_ID= Add Project ID here
    ```
 
-````
+4. **Run the code to see it in action**
 
-4. **Set required environment variables**
-   - `MAIN_DB`: Tiger service ID to fork. If omitted, the script falls back to the default `service_id` configured in the Tiger CLI (`tiger config show`).
-   - Optional overrides:
-     - `TIGER_FORK_NAME`: Custom fork name (defaults to `<serviceId>-fork-<timestamp>`)
-     - `TIGER_CLI`: Tiger CLI command name (defaults to `tiger`)
-     - `MAIN_DB_URL`, `TD_DB_HOST`, `TD_DB_PORT`, `TD_DB_USER`, `TD_DB_PASSWORD`: Fallback connection details when the CLI cannot return connection strings.
+```
+npm run dev
+```
+
+Make sure to have your Tiger Data console open to see the database being forked and deleted.
 
 ## Usage
 
@@ -57,7 +54,7 @@ This Node.js CLI script demonstrates how to create and manage zero-copy forks of
 
 ```bash
 MAIN_DB=<service-id> npm run dev
-````
+```
 
 ### Production (build and run)
 
