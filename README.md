@@ -1,1 +1,86 @@
-# Tiger Data Database Forking Demo This Node.js CLI script demonstrates how to create and manage zero-copy forks of Tiger Data Postgres databases. ## Features - Creates a zero-copy fork of a Tiger Data Postgres database - Runs sample queries on both the fork and main database - Demonstrates data isolation between databases - Cleans up the fork afterward ## Prerequisites - Node.js (v16 or higher) - Tiger Data CLI installed and configured - Access to Tiger Data Postgres databases ## Installation `bash npm install ` ## Configuration The script uses environment variables for configuration. You can set these before running: `bash # Main database name (REQUIRED) export MAIN_DB=my-database # Fork name is auto-generated as: ${MAIN_DB}-fork-${Date.now()} # Tiger Data CLI command (defaults to 'td') export TD_CLI=td # Database connection details (if CLI doesn't provide connection strings) export TD_DB_HOST=localhost export TD_DB_PORT=5432 export TD_DB_USER=postgres export TD_DB_PASSWORD=your-password ` **Note:** The `MAIN_DB` environment variable is required. The fork database name is automatically generated as `${MAIN_DB}-fork-${Date.now()}`. ## Usage ### Development (with ts-node) `bash MAIN_DB=my-database npm run dev ` ### Production (after building) `bash npm run build MAIN_DB=my-database npm start ` **Windows PowerShell:** `powershell $env:MAIN_DB="my-database"; npm run dev ` ## How It Works 1. **Create Fork**: Uses Tiger Data CLI to create a zero-copy fork of the main database 2. **Get Connections**: Retrieves connection strings for both databases 3. **Insert on Fork**: Inserts a test row into the fork to demonstrate write operations 4. **Compare Data**: Queries both databases to show that data changes are isolated 5. **Cleanup**: Deletes the fork using Tiger Data CLI ## Customization You may need to adjust the Tiger Data CLI commands in `src/index.ts` based on your actual CLI syntax: - `createFork()`: Adjust the fork creation command - `deleteFork()`: Adjust the fork deletion command - `getConnectionString()`: Adjust how connection strings are retrieved ## Notes - The script creates a `test_data` table if it doesn't exist - Test rows include a timestamp and database name for easy identification - All operations include error handling and informative console output # td-private # td-private "# td-private" "# td-private" "# td-private" "# td-private"
+# Tiger Data Database Forking Demo
+
+This Node.js CLI script demonstrates how to create and manage zero-copy forks of Tiger Data Postgres databases.
+
+## Features
+
+- Creates a zero-copy fork of a Tiger Data Postgres database
+- Runs sample queries on both the fork and main database
+- Demonstrates data isolation between databases
+- Cleans up the fork afterward
+
+## Prerequisites
+
+- Node.js 18 or newer
+- Tiger Data CLI (`tiger`) [Link to the Tiger CLI GitHub](https://github.com/timescale/tiger-cli)
+- Access to a Tiger Data Postgres service that can be forked
+
+## Local Setup
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/your-org/tiger-data-take-home.git
+   cd tiger-data-take-home
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Create a `.env` file**
+
+   ```bash
+   cp .env.example .env    # if provided
+   # otherwise create src/.env manually and set MAIN_DB or TIGER_SERVICE_ID
+   ```
+
+   ```
+   MAIN_DB= Add Service Id here
+    TIGER_PROJECT_ID= Add Project ID here
+   ```
+
+````
+
+4. **Set required environment variables**
+   - `MAIN_DB`: Tiger service ID to fork. If omitted, the script falls back to the default `service_id` configured in the Tiger CLI (`tiger config show`).
+   - Optional overrides:
+     - `TIGER_FORK_NAME`: Custom fork name (defaults to `<serviceId>-fork-<timestamp>`)
+     - `TIGER_CLI`: Tiger CLI command name (defaults to `tiger`)
+     - `MAIN_DB_URL`, `TD_DB_HOST`, `TD_DB_PORT`, `TD_DB_USER`, `TD_DB_PASSWORD`: Fallback connection details when the CLI cannot return connection strings.
+
+## Usage
+
+### Development (ts-node)
+
+```bash
+MAIN_DB=<service-id> npm run dev
+````
+
+### Production (build and run)
+
+```bash
+npm run build
+MAIN_DB=<service-id> npm start
+```
+
+### Windows PowerShell
+
+```powershell
+$env:MAIN_DB="<service-id>"
+npm run dev
+```
+
+## How It Works
+
+1. **Create Fork** – `tiger service fork ${sourceServiceId} --name ${forkName} --now`
+2. **Get Connections** – `tiger db connection-string --service-id ${serviceId} --with-password`
+3. **Insert on Fork** – creates/updates a `test_data` table with a sample row
+4. **Compare Data** – queries both databases to demonstrate isolation
+5. **Cleanup** – `tiger service delete ${serviceId} --confirm`
+
+## Customization
+
+Adjust the CLI calls in `src/index.ts` if your Tiger CLI workflow differs (e.g., custom project IDs, output formats, or fork flags).
